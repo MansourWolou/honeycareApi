@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  data-psql:
+    image: postgres
+    container_name: d-psql
+    ports:
+      - "5433:5432"
+    restart: unless-stopped
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=employeedb
+    volumes:
+      - psql:/var/lib/postgres/psql
+    networks:
+      - working
+  api:
+    build: .
+    container_name: api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - data-psql
+    networks:
+      - working
+volumes:
+  psql:
+networks:
+  working:
